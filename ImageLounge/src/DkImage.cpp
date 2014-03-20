@@ -67,12 +67,26 @@ bool compLogicQString(const QString & lhs, const QString & rhs) {
 	QRegExp r("\\d+");
 
 	if (lhs.indexOf(r) >= 0) {
-		long long lhn = r.cap().toLongLong();
+//		long long lhn = r.cap().toLongLong();
+		QString lhstr = r.cap();
 
 		// we don't just want to find two numbers
 		// but we want them to be at the same position
 		if (rhs.indexOf(r) >= 0 && r.indexIn(lhs) == r.indexIn(rhs))
-			return lhn < r.cap().toLongLong();
+		{
+			QString rhstr = r.cap();
+			if(rhstr.size() > lhstr.size())
+			{
+				while(rhstr.size() != lhstr.size())
+					lhstr = "0" + lhstr;
+			}
+			else
+			{
+				while(rhstr.size() != lhstr.size())
+					rhstr = "0" + rhstr;
+			}
+			return lhstr < rhstr;
+		}
 
 	}
 
