@@ -3158,7 +3158,7 @@ QString DkMetaDataInfo::getGPSCoordinates() {
 			Lon = QString(DkImageLoader::imgMetaData.getNativeExifValue("Exif.GPSInfo.GPSLongitude").c_str());
 			LonRef = QString(DkImageLoader::imgMetaData.getNativeExifValue("Exif.GPSInfo.GPSLongitudeRef").c_str());
 			//example url
-			//http://maps.google.at/maps?q=N+48°+8'+31.940001''+E16°+15'+35.009998''
+			//http://maps.google.at/maps?q=N+48ï¿½+8'+31.940001''+E16ï¿½+15'+35.009998''
 
 			gpsInfo = "http://maps.google.at/maps?q=" + LatRef + "+";
 
@@ -3178,7 +3178,7 @@ QString DkMetaDataInfo::getGPSCoordinates() {
 				
 				if (i==0) {
 					valS.setNum((int)val1);
-					gpsInfo += valS + "°";
+					gpsInfo += valS + "ï¿½";
 				}
 				if (i==1) {
 					if (val2 > 1)							
@@ -3212,9 +3212,9 @@ QString DkMetaDataInfo::getGPSCoordinates() {
 
 				if (i==0) {
 					valS.setNum((int)val1);
-					gpsInfo += valS + "°";
-					//gpsInfo += valS + QString::fromUtf16((ushort*)"0xb0");//QChar('°');
-					//gpsInfo += valS + QString::setUnicode("0xb0");//QChar('°');
+					gpsInfo += valS + "ï¿½";
+					//gpsInfo += valS + QString::fromUtf16((ushort*)"0xb0");//QChar('ï¿½');
+					//gpsInfo += valS + QString::setUnicode("0xb0");//QChar('ï¿½');
 				}
 				if (i==1) {
 					if (val2 > 1)							
@@ -3501,24 +3501,32 @@ void DkMetaDataInfo::layoutLabels() {
 		return;
 
 	// #Labels / numLines = #Spalten
+    qDebug() << "INITIAL : " << size();
 	numLines = 6;
 	int cols = ((float)numLabels+numLines-1)/numLines > 2 ? ((float)numLabels+numLines-1)/numLines : 2;
 	numLines = cvCeil((float)numLabels/cols);
 
-	//qDebug() << "numCols: " << cols;
+    qDebug() << "numCols: " << cols << " and maxcols: " << maxCols << " numrows: " << numLines;
 
 	if (cols > maxCols)
 		qDebug() << "Labels are skipped...";
 
 	//if (cols == 1) {
 		exifHeight = (pLabels.at(0)->height() + yMargin)*numLines + yMargin;
+        qDebug() << "exifheight is : " << exifHeight << " parent height : " << parent->height() << " width : " << parent->width();
 	//} else exifHeight = 120;
 
 	//widget size
 	if (parent->width() < minWidth)
+    {
+        qDebug() << "INTO 1";
 		QWidget::setCursor(Qt::OpenHandCursor);
+    }
 	else
+    {
+        qDebug() << "INTO 2";
 		QWidget::unsetCursor();
+    }
 
 	int width;
 	//if (widthParent)
@@ -3529,7 +3537,14 @@ void DkMetaDataInfo::layoutLabels() {
 	//qDebug() << "width" << parent->width();
 
 	//set Geometry if exif height is changed
-	setGeometry(0, parent->height()-exifHeight, parent->width(), exifHeight);
+    //resize(parent->width(),exifHeight);
+    setMinimumSize(parent->width(),exifHeight);
+    setMaximumSize(parent->width(),exifHeight);
+ //   qDebug() << "before: 0 " << parent->height()-exifHeight  <<  parent->width() <<  exifHeight << size().height();
+ //   qDebug() << "geometry : " << geometry();
+    setGeometry(0, parent->height()-exifHeight, parent->width(), exifHeight);
+ //   qDebug() << "after: 0 " << parent->height()-exifHeight  <<  parent->width() <<  exifHeight << size().height();
+ //   qDebug() << "geometry : " << geometry();
 
 	//subtract label length
 	for (int i=0; i<maxLenLabel.size(); i++) width -= (maxLenLabel[i] + xMargin);
@@ -3622,8 +3637,9 @@ void DkMetaDataInfo::paintEvent(QPaintEvent *event) {
 }
 
 void DkMetaDataInfo::resizeEvent(QResizeEvent *resizeW) {
-	//qDebug() << "resizeW:" << resizeW->size().width();
-	//qDebug() << parent->width();
+    qDebug() << "resizeW:" << resizeW->size().width();
+    qDebug() << "resizeW:" << geometry();
+    //qDebug() << parent->width();
 
 	setMinimumHeight(1);
 	setMaximumHeight(exifHeight);
@@ -4216,11 +4232,11 @@ void DkEditableRect::mouseMoveEvent(QMouseEvent *event) {
 			QToolTip::showText(event->globalPos(),
 				QString::number(width) + " x " +
 				QString::number(height) + " px\n" +
-				QString::number(sAngle) + "°",
+				QString::number(sAngle) + "ï¿½",
 				this);
 		}
 
-		emit statusInfoSignal(QString::number(width) + " x " + QString::number(height) + " px | " + QString::number(sAngle) + "°");
+		emit statusInfoSignal(QString::number(width) + " x " + QString::number(height) + " px | " + QString::number(sAngle) + "ï¿½");
 	}
 
 	//QWidget::mouseMoveEvent(event);
