@@ -3501,32 +3501,24 @@ void DkMetaDataInfo::layoutLabels() {
 		return;
 
 	// #Labels / numLines = #Spalten
-    qDebug() << "INITIAL : " << size();
 	numLines = 6;
 	int cols = ((float)numLabels+numLines-1)/numLines > 2 ? ((float)numLabels+numLines-1)/numLines : 2;
 	numLines = cvCeil((float)numLabels/cols);
 
-    qDebug() << "numCols: " << cols << " and maxcols: " << maxCols << " numrows: " << numLines;
+	//qDebug() << "numCols: " << cols;
 
 	if (cols > maxCols)
 		qDebug() << "Labels are skipped...";
 
 	//if (cols == 1) {
 		exifHeight = (pLabels.at(0)->height() + yMargin)*numLines + yMargin;
-        qDebug() << "exifheight is : " << exifHeight << " parent height : " << parent->height() << " width : " << parent->width();
 	//} else exifHeight = 120;
 
 	//widget size
 	if (parent->width() < minWidth)
-    {
-        qDebug() << "INTO 1";
 		QWidget::setCursor(Qt::OpenHandCursor);
-    }
 	else
-    {
-        qDebug() << "INTO 2";
 		QWidget::unsetCursor();
-    }
 
 	int width;
 	//if (widthParent)
@@ -3537,14 +3529,9 @@ void DkMetaDataInfo::layoutLabels() {
 	//qDebug() << "width" << parent->width();
 
 	//set Geometry if exif height is changed
-    //resize(parent->width(),exifHeight);
     setMinimumSize(parent->width(),exifHeight);
     setMaximumSize(parent->width(),exifHeight);
- //   qDebug() << "before: 0 " << parent->height()-exifHeight  <<  parent->width() <<  exifHeight << size().height();
- //   qDebug() << "geometry : " << geometry();
-    setGeometry(0, parent->height()-exifHeight, parent->width(), exifHeight);
- //   qDebug() << "after: 0 " << parent->height()-exifHeight  <<  parent->width() <<  exifHeight << size().height();
- //   qDebug() << "geometry : " << geometry();
+	setGeometry(0, parent->height()-exifHeight, parent->width(), exifHeight);
 
 	//subtract label length
 	for (int i=0; i<maxLenLabel.size(); i++) width -= (maxLenLabel[i] + xMargin);
@@ -3637,9 +3624,8 @@ void DkMetaDataInfo::paintEvent(QPaintEvent *event) {
 }
 
 void DkMetaDataInfo::resizeEvent(QResizeEvent *resizeW) {
-    qDebug() << "resizeW:" << resizeW->size().width();
-    qDebug() << "resizeW:" << geometry();
-    //qDebug() << parent->width();
+	//qDebug() << "resizeW:" << resizeW->size().width();
+	//qDebug() << parent->width();
 
 	setMinimumHeight(1);
 	setMaximumHeight(exifHeight);
@@ -4908,5 +4894,6 @@ void DkSlider::createLayout() {
 }
 
 }
+
 
 
