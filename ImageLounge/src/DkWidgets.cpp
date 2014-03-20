@@ -3529,6 +3529,8 @@ void DkMetaDataInfo::layoutLabels() {
 	//qDebug() << "width" << parent->width();
 
 	//set Geometry if exif height is changed
+    setMinimumSize(parent->width(),exifHeight);
+    setMaximumSize(parent->width(),exifHeight);
 	setGeometry(0, parent->height()-exifHeight, parent->width(), exifHeight);
 
 	//subtract label length
